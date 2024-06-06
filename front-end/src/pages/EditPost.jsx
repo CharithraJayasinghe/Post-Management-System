@@ -9,6 +9,13 @@ const EditPost = () => {
   const [image, setImage] = useState('');
   const navigate = useNavigate();
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.onloadend = () => setImage(reader.result); // Base64 string
+    reader.readAsDataURL(file);
+  };
+
   useEffect(() => {
     api.get(`/get-post/${id}`)
       .then(response => {
@@ -51,12 +58,12 @@ const EditPost = () => {
           />
         </div>
         <div>
-          <label className="block text-gray-700">Image URL</label>
+          <label className="block text-gray-700">Image</label>
           <input
-            type="text"
-            value={image}
-            onChange={(e) => setImage(e.target.value)}
+            type="file"
+            onChange={handleImageChange}
             className="w-full p-2 border border-gray-300 rounded"
+            required
           />
         </div>
         <button type="submit" className="bg-green-500 text-white px-4 py-2 rounded">Update Post</button>
