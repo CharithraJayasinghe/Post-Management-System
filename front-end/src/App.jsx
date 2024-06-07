@@ -5,6 +5,7 @@ import Post from "./pages/Posts";
 import CreatePost from "./pages/CreatePost";
 import EditPost from "./pages/EditPost";
 import PostDetails from "./pages/PostDetails";
+import { ToastContainer } from "react-toastify";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -12,19 +13,15 @@ function App() {
   return (
     <Router>
       <Header />
+      <ToastContainer />
 
-      
       <Routes>
         <Route path="/" element={<Post />} />
         <Route path="/posts" element={<Post />} />
         <Route path="/create-post" element={<CreatePost />} />
         <Route path="/edit-post/:id" element={<EditPost />} />
         <Route path="/post/:id" element={<PostDetails />} />
-        
       </Routes>
-   
-
-      
     </Router>
   );
 }

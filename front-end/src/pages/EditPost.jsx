@@ -28,18 +28,25 @@ const EditPost = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const formData = new FormData();
-    formData.append("image", image);
     formData.append("title", title);
     formData.append("description", description);
-    api
-      .post("/upload", formData)
-      .then((response) => {
-        console.log(response.data.filePath);
-        const imagePath = response.data.filePath;
-        return api.put(`update-post/${id}`, { title, description, imagePath });
-      })
-      .then(() => navigate("/posts"))
-      .catch((error) => console.error(error));
+    
+    if (image instanceof File) {
+      formData.append("image", image);
+      api
+        .post("/upload", formData)
+        .then((response) => {
+          const imagePath = response.data.filePath;
+          return api.put(`update-post/${id}`, { title, description, imagePath });
+        })
+        .then(() => navigate("/posts"))
+        .catch((error) => console.error(error));
+    } else {
+      api
+        .put(`update-post/${id}`, { title, description })
+        .then(() => navigate("/posts"))
+        .catch((error) => console.error(error));
+    }
   };
 
   return (
@@ -71,7 +78,7 @@ const EditPost = () => {
             type="file"
             onChange={handleImageChange}
             className="w-full p-2 border border-gray-300 rounded"
-            required
+            
           />
         </div>
         <button

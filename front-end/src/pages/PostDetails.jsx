@@ -19,14 +19,14 @@ const PostDetails = () => {
   }
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container mx-auto p-4 bg-gray-300 rounded-lg mt-8">
       <h1 className="text-3xl font-bold">{post.title}</h1>
       <p>{post.description}</p>
       {post.image && (
         <img
           src={`${backendUrl}/${post.image}`}
           alt={post.image}
-          className="w-full h-64 object-cover mt-4"
+          className="w-full h-64 object-cover mt-4 rounded-lg"
         />
       )}
     </div>

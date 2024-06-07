@@ -31,7 +31,7 @@ export const updatePost = async (req, res) => {
     const { id } = req.params;
     const { title, description, imagePath } = req.body;
 
-    if (!title || !description || !imagePath) {
+    if (!title || !description) {
       return res.status(400).json({ message: "All fields are required" });
     }
 

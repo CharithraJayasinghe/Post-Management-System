@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import api from "../api";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const CreatePost = () => {
   const [title, setTitle] = useState("");
@@ -14,23 +16,36 @@ const CreatePost = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (!image) {
+      toast.error("Please upload an image.");
+      return;
+    }
     const formData = new FormData();
     formData.append("image", image);
     formData.append("title", title);
     formData.append("description", description);
+    toast.info("Uploading image...");
     api
       .post("/upload", formData)
       .then((response) => {
         console.log(response.data.filePath);
         const imagePath = response.data.filePath;
+        toast.success("Image uploaded successfully!");
         return api.post("/create-post", { title, description, imagePath });
       })
-      .then(() => navigate("/posts"))
-      .catch((error) => console.error(error));
+      .then(() => {
+        navigate("/posts")
+        toast.success("Post created successfully!");
+      })
+      .catch((error) => {
+        toast.error(`Error: ${error.message}`);
+        console.error(error);
+      });
   };
 
   return (
     <div className="container mx-auto p-4">
+      <ToastContainer />
       <h1 className="text-3xl font-bold mb-4">Create Post</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
@@ -53,7 +68,9 @@ const CreatePost = () => {
           />
         </div>
         <div>
-          <label className="block text-gray-700">Image</label>
+          <label className="block text-gray-700">
+            Image. max image size 5mb
+          </label>
           <input
             type="file"
             onChange={handleImageChange}
