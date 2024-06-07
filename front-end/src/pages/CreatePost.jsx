@@ -1,26 +1,32 @@
-import React, { useState } from 'react';
-import api from '../api';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import api from "../api";
+import { useNavigate } from "react-router-dom";
 
 const CreatePost = () => {
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [image, setImage] = useState('');
-  const navigate = useNavigate(); 
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [image, setImage] = useState("");
+  const navigate = useNavigate();
 
   const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    const reader = new FileReader();
-    reader.onloadend = () => setImage(reader.result); // Base64 string
-    reader.readAsDataURL(file);
-    
+    setImage(e.target.files[0]);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    api.post('/create-post', { title, description, image })
-      .then(() => navigate('/posts')) 
-      .catch(error => console.error(error));
+    const formData = new FormData();
+    formData.append("image", image);
+    formData.append("title", title);
+    formData.append("description", description);
+    api
+      .post("/upload", formData)
+      .then((response) => {
+        console.log(response.data.filePath);
+        const imagePath = response.data.filePath;
+        return api.post("/create-post", { title, description, imagePath });
+      })
+      .then(() => navigate("/posts"))
+      .catch((error) => console.error(error));
   };
 
   return (
@@ -46,16 +52,7 @@ const CreatePost = () => {
             required
           />
         </div>
-        {/* <div>
-          <label className="block text-gray-700">Image URL</label>
-          <input
-            type="text"
-            value={image}
-            onChange={(e) => setImage(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded"
-          />
-        </div> */}
-         <div>
+        <div>
           <label className="block text-gray-700">Image</label>
           <input
             type="file"
@@ -64,7 +61,12 @@ const CreatePost = () => {
             required
           />
         </div>
-        <button type="submit" className="bg-green-500 text-white px-4 py-2 rounded">Create Post</button>
+        <button
+          type="submit"
+          className="bg-green-500 text-white px-4 py-2 rounded"
+        >
+          Create Post
+        </button>
       </form>
     </div>
   );

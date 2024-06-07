@@ -9,17 +9,15 @@ export const getAllPost = async (req, res) => {
   }
 };
 
-// Create a new post
 export const createPost = async (req, res) => {
   try {
-    const { title, description, image } = req.body;
+    const { title, description, imagePath } = req.body;
 
-    // Validate input
-    if (!title || !description || !image) {
+    if (!title || !description || !imagePath) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
-    const newPost = new Post({ title, description, image });
+    const newPost = new Post({ title, description, image: imagePath });
     await newPost.save();
     res.status(201).json(newPost);
   } catch (error) {
@@ -27,20 +25,19 @@ export const createPost = async (req, res) => {
   }
 };
 
-// Update a post
+
 export const updatePost = async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, description, image } = req.body;
+    const { title, description, imagePath } = req.body;
 
-    // Validate input
-    if (!title || !description || !image) {
+    if (!title || !description || !imagePath) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
     const updatedPost = await Post.findByIdAndUpdate(
       id,
-      { title, description, image },
+      { title, description, image: imagePath },
       { new: true, runValidators: true }
     );
 

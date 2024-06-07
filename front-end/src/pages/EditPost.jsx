@@ -10,10 +10,7 @@ const EditPost = () => {
   const navigate = useNavigate();
 
   const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    const reader = new FileReader();
-    reader.onloadend = () => setImage(reader.result); // Base64 string
-    reader.readAsDataURL(file);
+    setImage(e.target.files[0]);
   };
 
   useEffect(() => {
@@ -27,11 +24,28 @@ const EditPost = () => {
       .catch(error => console.error(error));
   }, [id]);
 
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   api.put(`/update-post/${id}`, { title, description, image })
+  //     .then(() => navigate('/posts'))
+  //     .catch(error => console.error(error));
+  // };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    api.put(`/update-post/${id}`, { title, description, image })
-      .then(() => navigate('/posts'))
-      .catch(error => console.error(error));
+    const formData = new FormData();
+    formData.append("image", image);
+    formData.append("title", title);
+    formData.append("description", description);
+    api
+      .post("/upload", formData)
+      .then((response) => {
+        console.log(response.data.filePath);
+        const imagePath = response.data.filePath;
+        return api.put(`update-post/${id}`, { title, description, imagePath });
+      })
+      .then(() => navigate("/posts"))
+      .catch((error) => console.error(error));
   };
 
   return (
