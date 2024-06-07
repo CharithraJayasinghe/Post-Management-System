@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import api from '../api';
-import { useNavigate, useParams } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import api from "../api";
+import { useNavigate, useParams } from "react-router-dom";
 
 const EditPost = () => {
   const { id } = useParams();
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [image, setImage] = useState('');
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [image, setImage] = useState("");
   const navigate = useNavigate();
 
   const handleImageChange = (e) => {
@@ -14,22 +14,16 @@ const EditPost = () => {
   };
 
   useEffect(() => {
-    api.get(`/get-post/${id}`)
-      .then(response => {
+    api
+      .get(`/get-post/${id}`)
+      .then((response) => {
         const { title, description, image } = response.data;
         setTitle(title);
         setDescription(description);
         setImage(image);
       })
-      .catch(error => console.error(error));
+      .catch((error) => console.error(error));
   }, [id]);
-
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   api.put(`/update-post/${id}`, { title, description, image })
-  //     .then(() => navigate('/posts'))
-  //     .catch(error => console.error(error));
-  // };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -80,7 +74,12 @@ const EditPost = () => {
             required
           />
         </div>
-        <button type="submit" className="bg-green-500 text-white px-4 py-2 rounded">Update Post</button>
+        <button
+          type="submit"
+          className="bg-green-500 text-white px-4 py-2 rounded"
+        >
+          Update Post
+        </button>
       </form>
     </div>
   );

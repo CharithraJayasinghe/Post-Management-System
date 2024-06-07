@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const PostCard = ({ post, onDelete }) => {
   
-  const backendUrl = "http://localhost:5000";
+  const backendUrl = import.meta.env.VITE_IMAGE_URL;
 
   return (
     <div className="bg-white shadow-md rounded-lg p-4 m-4">

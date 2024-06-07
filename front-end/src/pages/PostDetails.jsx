@@ -5,7 +5,7 @@ import api from "../api";
 const PostDetails = () => {
   const { id } = useParams();
   const [post, setPost] = useState(null);
-  const backendUrl = "http://localhost:5000";
+  const backendUrl = import.meta.env.VITE_IMAGE_URL;
 
   useEffect(() => {
     api
@@ -26,7 +26,7 @@ const PostDetails = () => {
         <img
           src={`${backendUrl}/${post.image}`}
           alt={post.image}
-          className="mt-2 w-full h-64 object-cover"
+          className="w-full h-64 object-cover mt-4"
         />
       )}
     </div>
